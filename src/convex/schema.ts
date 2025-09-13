@@ -32,12 +32,46 @@ const schema = defineSchema(
       role: v.optional(roleValidator), // role of the user. do not remove
     }).index("email", ["email"]), // index for the email. do not remove or modify
 
-    // add other tables here
+    // Cattle data table
+    cattle: defineTable({
+      userId: v.id("users"),
+      animalId: v.string(),
+      breed: v.string(),
+      age: v.number(),
+      weight: v.number(),
+      lactationStage: v.string(),
+      parity: v.number(),
+    }).index("by_user", ["userId"]),
 
-    // tableName: defineTable({
-    //   ...
-    //   // table fields
-    // }).index("by_field", ["field"])
+    // Predictions table
+    predictions: defineTable({
+      userId: v.id("users"),
+      animalId: v.string(),
+      // Input data
+      breed: v.string(),
+      age: v.number(),
+      weight: v.number(),
+      lactationStage: v.string(),
+      parity: v.number(),
+      prevYield: v.number(),
+      feedType: v.string(),
+      feedQty: v.number(),
+      walkingKm: v.number(),
+      ruminationHr: v.number(),
+      restingHr: v.number(),
+      bodyTemp: v.number(),
+      heartRate: v.number(),
+      somaticCellCount: v.number(),
+      ambientTemp: v.number(),
+      humidity: v.number(),
+      housingCondition: v.string(),
+      activityAlerts: v.number(),
+      // Predictions
+      predictedMilkYield: v.number(),
+      diseaseStatus: v.string(),
+      diseaseProbability: v.number(),
+      recommendations: v.string(),
+    }).index("by_user", ["userId"]),
   },
   {
     schemaValidation: false,

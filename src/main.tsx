@@ -1,7 +1,13 @@
 import { Toaster } from "@/components/ui/sonner";
 import { VlyToolbar } from "../vly-toolbar-readonly.tsx";
 import { InstrumentationProvider } from "@/instrumentation.tsx";
+import { ThemeProvider } from "@/contexts/ThemeContext";
+import { Navigation } from "@/components/Navigation";
 import AuthPage from "@/pages/Auth.tsx";
+import Dashboard from "@/pages/Dashboard.tsx";
+import Predict from "@/pages/Predict.tsx";
+import History from "@/pages/History.tsx";
+import Reports from "@/pages/Reports.tsx";
 import { ConvexAuthProvider } from "@convex-dev/auth/react";
 import { ConvexReactClient } from "convex/react";
 import { StrictMode, useEffect } from "react";
@@ -13,8 +19,6 @@ import NotFound from "./pages/NotFound.tsx";
 import "./types/global.d.ts";
 
 const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL as string);
-
-
 
 function RouteSyncer() {
   const location = useLocation();
@@ -39,21 +43,27 @@ function RouteSyncer() {
   return null;
 }
 
-
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <VlyToolbar />
     <InstrumentationProvider>
       <ConvexAuthProvider client={convex}>
-        <BrowserRouter>
-          <RouteSyncer />
-          <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route path="/auth" element={<AuthPage redirectAfterAuth="/" />} /> {/* TODO: change redirect after auth to correct page */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-        <Toaster />
+        <ThemeProvider>
+          <BrowserRouter>
+            <RouteSyncer />
+            <Navigation />
+            <Routes>
+              <Route path="/" element={<Landing />} />
+              <Route path="/auth" element={<AuthPage redirectAfterAuth="/dashboard" />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/predict" element={<Predict />} />
+              <Route path="/history" element={<History />} />
+              <Route path="/reports" element={<Reports />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+          <Toaster />
+        </ThemeProvider>
       </ConvexAuthProvider>
     </InstrumentationProvider>
   </StrictMode>,
